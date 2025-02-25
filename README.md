@@ -31,7 +31,7 @@ Credit: https://stegosaurusdormant.com/bare-git-repo/#copying-your-dotfiles-to-a
 
 1. Clone your repo onto the new machine as a non-bare repository. You need a non-bare repository on the new machine since you’re trying to move the actual dotfiles (that is, the snapshot of your repo) onto the new machine, not just the history.
    ```
-   git clone --separate-git-dir=$HOME/dotfiles git@github.com:GregOwen/dotfiles.git dotfiles-tmp
+   git clone --separate-git-dir=$HOME/dotfiles git@github.com:mark-dostalik/dotfiles.git dotfiles-tmp
    ```
    `--separate-git-dir` tells Git that the history should live in `$HOME/dotfiles` even though the snapshot will live in `dotfiles-tmp` (which is just an arbitrary temporary directory that we’ll delete later once we’ve moved the `dotfiles` into their proper locations).
    
