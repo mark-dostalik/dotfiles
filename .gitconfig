@@ -1,12 +1,12 @@
 [core]
 	editor = vim
 [alias]
-	ll = log --pretty=format:\"%C(yellow)%h%Creset %C(green)%ad%Creset %C(magenta bold)%an%Creset:%C(red bold)%d%Creset %s\" -C -M --date=short --graph --all
-	st = status
-	ss = st --short
-	sw = switch
 	br = branch
-	ci = commit
+	co = commit
+	ll = log --pretty=format:\"%C(yellow)%h%Creset %C(green)%ad%Creset %C(magenta bold)%an%Creset:%C(red bold)%d%Creset %s\" -C -M --date=short --graph --all
+	ss = st --short
+	st = status
+	sw = switch
   	fixup = "!git log -n 50 --pretty=format:'%h %s' --no-merges | fzf | cut -c -7 | xargs -o git commit --fixup"
 [push]
 	autoSetupRemote = true
