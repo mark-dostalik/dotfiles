@@ -20,6 +20,9 @@ _comp_options+=(globdots)
 prompt_context(){}  # always hide the "user@hostname" info on the local machine
 export LANG=en_US.UTF-8  # manually set your language environment
 
+# bash-like output of time command
+export TIMEFMT=$'\nreal\t%*E\nuser\t%*U\nsys\t%*S'
+
 # vim in terminal set-up
 export VI_MODE_SET_CURSOR=true  # set cursor to line instead of block in insert mode
 export MODE_INDICATOR=""
