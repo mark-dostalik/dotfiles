@@ -43,8 +43,8 @@ nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
 " center cursor after moving half-page down/up
-nnoremap <C-d> <C-d>zz
-nnoremap <C-u> <C-u>zz
+" nnoremap <C-d> <C-d>zz
+" nnoremap <C-u> <C-u>zz
 
 " center cursor when searching
 nnoremap n nzz
