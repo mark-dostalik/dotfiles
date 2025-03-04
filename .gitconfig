@@ -5,6 +5,7 @@
 	br = branch
 	co = commit
 	ll = log --pretty=format:\"%C(yellow)%h%Creset %C(green)%ad%Creset %C(magenta bold)%an%Creset:%C(red bold)%d%Creset %s\" -C -M --date=short --graph --all
+	pf = push --force-with-lease --force-if-includes
 	ss = st --short
 	st = status
 	sw = switch
