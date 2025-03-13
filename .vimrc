@@ -101,6 +101,7 @@ call plug#begin('~/.vim/plugged')
   Plug 'davidhalter/jedi-vim'  " Python auto-completion
   Plug 'itchyny/vim-cursorword'  " underline word under cursor
   Plug 'machakann/vim-highlightedyank'  " highlight yanked text (not needed in neovim)
+  Plug 'rhysd/conflict-marker.vim'  " git conflict resolution tool
   Plug 'tpope/vim-commentary'  " `gcc` commenting command
   Plug 'tpope/vim-fugitive'  " git integration
   Plug 'tpope/vim-repeat'  " enable `.` command after a plugin map
