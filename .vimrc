@@ -16,6 +16,8 @@ set smartcase           	" No ignorecase if uppercase char present
 
 set showcmd			" Show typed commands (e.g. `yiw`)
 
+set belloff=all			" Turn off error beeps
+
 set number
 set numberwidth=2
 set relativenumber
