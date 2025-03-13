@@ -72,6 +72,7 @@ autocmd Filetype python set
      \ softtabstop=4
      \ shiftwidth=4
      \ textwidth=120
+     \ formatoptions=q
      \ expandtab
      \ autoindent
      \ fileformat=unix
