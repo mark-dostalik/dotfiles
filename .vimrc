@@ -72,11 +72,15 @@ autocmd Filetype python set
      \ softtabstop=4
      \ shiftwidth=4
      \ textwidth=120
+     \ colorcolumn=+1
      \ formatoptions=q
      \ expandtab
      \ autoindent
      \ fileformat=unix
      \ encoding=utf-8
+
+autocmd FileType python highlight
+     \ ColorColumn ctermbg=8
 
 autocmd FileType python map <buffer> <F9> :w<CR>:exec '!python3' shellescape(@%, 1)<CR>
 autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:exec '!python3' shellescape(@%, 1)<CR>
