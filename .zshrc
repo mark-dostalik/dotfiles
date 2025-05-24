@@ -27,6 +27,15 @@ export TIMEFMT=$'\nreal\t%*E\nuser\t%*U\nsys\t%*S'
 export VI_MODE_SET_CURSOR=true  # set cursor to line instead of block in insert mode
 export MODE_INDICATOR=""
 
+# enable vim selections within quoted strings
+autoload -U select-quoted
+zle -N select-quoted
+for m in visual viopp; do
+    for c in {a,i}{\',\",\`}; do
+        bindkey -M $m $c select-quoted
+    done
+done
+
 # mcfly set-up
 eval "$(mcfly init zsh)"
 export MCFLY_KEY_SCHEME=vim  # use vim key scheme in McFly (enhancement of CTRL + r)
