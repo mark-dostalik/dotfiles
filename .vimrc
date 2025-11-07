@@ -29,7 +29,7 @@ hi my_bg guibg=#000000
 hi my_bg_cursor guifg=#fabd2f guibg=#3c3836
 hi! link LineNr my_bg
 hi! link CursorLineNr my_bg_cursor
-highlight LineNr ctermfg=grey ctermbg=black
+highlight LineNr ctermfg=grey
 
 " set powerline color theme
 let g:airline_theme='deus'
@@ -56,10 +56,16 @@ nnoremap N Nzz
 nnoremap Y y$
 
 " Change cursor between Normal and Insert modes
-" https://stackoverflow.com/questions/6488683/how-to-change-the-cursor-between-normal-and-insert-modes-in-vim
-let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-let &t_SR = "\<Esc>]50;CursorShape=2\x7"
-let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+" Change cursor between insert, normal, and replace modes
+if empty($TMUX)
+  let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+  let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+  let &t_SR = "\<Esc>]50;CursorShape=2\x7"
+else
+  let &t_SI = "\e[5 q"
+  let &t_SR = "\e[4 q"
+  let &t_EI = "\e[1 q"
+endif
 set ttimeout
 set ttimeoutlen=1
 set ttyfast
