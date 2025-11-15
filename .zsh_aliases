@@ -1,4 +1,6 @@
 alias activate="source .venv/bin/activate"
 alias dotfiles="git --git-dir=$HOME/dotfiles/ --work-tree=$HOME"
-alias ls="eza"
+alias fvim='vim $(fzf --preview="bat --color=always {}")'
+alias fzf="fzf --tmux center"
 alias ll="ls -al --icons"
+alias ls="eza"

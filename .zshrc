@@ -47,9 +47,18 @@ for m in visual viopp; do
     done
 done
 
-# mcfly set-up
-eval "$(mcfly init zsh)"
-export MCFLY_KEY_SCHEME=vim  # use vim key scheme in McFly (enhancement of CTRL + r)
+# Set up fzf key bindings and fuzzy completion
+source <(fzf --zsh)
+
+# carapace set-up
+export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
+zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+zstyle ':completion:*:git:*' group-order 'main commands' 'alias commands' 'external commands'
+source <(carapace _carapace)
 
 # accept zsh-autosuggestion by pressing CTRL + space
 bindkey '^ ' autosuggest-accept
+
+eval "$(zoxide init zsh)"
+source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh  # must be at the end
