@@ -1,12 +1,3 @@
-# oh-my-zsh configuration
-ZSH_THEME=""
-plugins=(
-    zsh-autosuggestions
-    zsh-syntax-highlighting
-)
-source $HOME/.oh-my-zsh/oh-my-zsh.sh
-
-# aliases
 source $HOME/.zsh_aliases
 source $HOME/.work_aliases
 
@@ -18,6 +9,7 @@ CASE_SENSITIVE="true"  # case-sensitive completion
 setopt NO_BEEP NO_AUTOLIST BASH_AUTOLIST NO_AUTO_MENU  # enable bash-like tab-completion
 
 # make tab-completion show hidden files and folders
+autoload -Uz compinit
 compinit
 _comp_options+=(globdots)
 
