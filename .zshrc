@@ -21,21 +21,17 @@ bindkey -M viins '^k' up-line-or-search
 function zle-keymap-select {
     if [[ $KEYMAP == vicmd ]]; then
         echo -ne "\e[2 q"  # block cursor
-	[[ -n $TMUX ]] && tmux set-option -p @zsh_vi_mode "normal" 2>/dev/null
     else
         echo -ne "\e[5 q"  # bar cursor
-	[[ -n $TMUX ]] && tmux set-option -p @zsh_vi_mode "insert" 2>/dev/null
     fi
 }
 zle -N zle-keymap-select
 function zle-line-init {
     echo -ne "\e[5 q"  # start bar cursor
-    [[ -n $TMUX ]] && tmux set-option -p @zsh_vi_mode "insert" 2>/dev/null
 }
 zle -N zle-line-init
 function zle-line-finish {
     echo -ne "\e[2 q"  # restore block cursor
-    [[ -n $TMUX ]] && tmux set-option -p @zsh_vi_mode "normal" 2>/dev/null
 }
 zle -N zle-line-finish
 precmd_functions+=(zle-keymap-select)
