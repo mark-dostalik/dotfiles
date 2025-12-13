@@ -1,0 +1,3 @@
+[submodule "/Users/dostalik/.config/tmux/plugins/tpm"]
+	path = /Users/dostalik/.config/tmux/plugins/tpm
+	url = https://github.com/tmux-plugins/tpm
