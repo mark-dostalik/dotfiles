@@ -38,15 +38,11 @@ let g:airline_theme='deus'
 set splitbelow
 set splitright
 
-"split navigations
+" split navigations
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-
-" center cursor after moving half-page down/up
-" nnoremap <C-d> <C-d>zz
-" nnoremap <C-u> <C-u>zz
 
 " center cursor when searching
 nnoremap n nzz
@@ -55,8 +51,7 @@ nnoremap N Nzz
 " make Y behave like D and C
 nnoremap Y y$
 
-" Change cursor between Normal and Insert modes
-" Change cursor between insert, normal, and replace modes
+" change cursor between insert, normal, and replace modes
 if empty($TMUX)
   let &t_SI = "\<Esc>]50;CursorShape=1\x7"
   let &t_EI = "\<Esc>]50;CursorShape=0\x7"
@@ -104,6 +99,7 @@ endif
 
 " Specify plugins
 call plug#begin('~/.vim/plugged')
+  Plug 'connorholyday/vim-snazzy'  " Snazzy color scheme
   Plug 'davidhalter/jedi-vim'  " Python auto-completion
   Plug 'itchyny/vim-cursorword'  " underline word under cursor
   Plug 'machakann/vim-highlightedyank'  " highlight yanked text (not needed in neovim)
@@ -116,3 +112,6 @@ call plug#begin('~/.vim/plugged')
   Plug 'vim-airline/vim-airline-themes'  " powerline color theme
   Plug 'vim-scripts/indentpython.vim'  " PEP8 compliant indentation (autoindent does not always work)
 call plug#end()
+
+set termguicolors
+colorscheme snazzy
