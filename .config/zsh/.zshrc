@@ -91,7 +91,7 @@ source ~/.cache/carapace-init.zsh
 autoload -Uz compinit && compinit
 _comp_options+=(globdots)
 
-source ~/.zsh/fzf-tab/fzf-tab.plugin.zsh
+source "${XDG_CONFIG_HOME}/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh"
 
 setopt MENU_COMPLETE
 
@@ -110,7 +110,7 @@ zstyle ':fzf-tab:complete:(vim|nvim|vi|cat|bat|less|more|ls|eza|cd):*' fzf-previ
 # | AUTO-SUGGESTIONS |
 # +------------------+
 
-source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+source "${XDG_CONFIG_HOME}/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
 bindkey '^ ' autosuggest-accept
 bindkey '^[[[CE' autosuggest-execute  # CTRL + Enter
@@ -149,7 +149,7 @@ eval "$(zoxide init --cmd cd zsh)"
 # | SYNTAX HIGHLIGHTNING |
 # +----------------------+
 
-source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source "${XDG_CONFIG_HOME}/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 # +---------+
 # | HELPERS |
