@@ -1,31 +1,23 @@
 [alias]
-	br = branch
-	co = commit
-	ll = log --pretty=format:\"%C(yellow)%h%Creset %C(green)%ad%Creset %C(magenta bold)%an%Creset:%C(red bold)%d%Creset %s\" -C -M --date=short --graph --all
-	pf = push --force-with-lease --force-if-includes
-	ss = st --short
-	st = status
-	sw = checkout  # tab-completion for switch doesn't work very well
-	fixup = commit --fixup
+  br = branch
+  co = commit
+  ll = log --pretty=format:\"%C(yellow)%h%Creset %C(green)%ad%Creset %C(magenta bold)%an%Creset:%C(red bold)%d%Creset %s\" -C -M --date=short --graph --all
+  pf = push --force-with-lease --force-if-includes
+  ss = st --short
+  st = status
+  sw = checkout  # tab-completion for switch doesn't work very well
+  fixup = commit --fixup
 [core]
-	editor = vim
-	pager = delta
+  editor = nvim
 [fetch]
-        prune = true
+  prune = true
 [includeIf "gitdir:~/work/"]
-	path = ~/work/.gitconfig
+  path = ~/work/.gitconfig
 [init]
-	defaultBranch = main
-[interactive]
-	diffFilter = delta --color-only
-[delta]
-	navigate = true  # use n and N to move between diff sections
-	dark = true      # or light = true, or omit for auto-detection
-[merge]
-	conflictStyle = zdiff3
+  defaultBranch = main
 [pager]
-	branch = false
+  branch = false
 [push]
-	autoSetupRemote = true
+  autoSetupRemote = true
 [rebase]
-	autosquash = true
+  autosquash = true
