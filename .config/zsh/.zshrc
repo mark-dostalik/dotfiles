@@ -9,6 +9,8 @@ source "${XDG_CONFIG_HOME}/zsh/.work_aliases"
 # | PROMPT |
 # +--------+
 
+# .zshrc
+fpath+=($XDG_CONFIG_HOME/zsh/plugins/pure)
 autoload -U promptinit; promptinit
 prompt pure
 
@@ -22,6 +24,8 @@ KEYTIMEOUT=1
 bindkey -M viins '^j' down-line-or-search
 bindkey -M viins '^k' up-line-or-search
 bindkey -M viins '^l' vi-forward-word
+bindkey "^H" backward-delete-char
+bindkey "^?" backward-delete-char
 
 # Switch cursor shape between insert and normal mode
 function zle-keymap-select {

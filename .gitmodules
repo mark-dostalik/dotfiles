@@ -4,6 +4,9 @@
 [submodule ".config/zsh/plugins/fzf-tab"]
 	path = .config/zsh/plugins/fzf-tab
 	url = https://github.com/Aloxaf/fzf-tab
+[submodule ".config/zsh/plugins/pure"]
+	path = .config/zsh/plugins/pure
+	url = https://github.com/sindresorhus/pure.git
 [submodule ".config/zsh/plugins/zsh-autosuggestions"]
 	path = .config/zsh/plugins/zsh-autosuggestions
 	url = https://github.com/zsh-users/zsh-autosuggestions

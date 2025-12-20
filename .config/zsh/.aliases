@@ -4,3 +4,4 @@ alias ll="ls -al --icons --git --group-directories-first"
 alias ls="eza"
 alias time="/usr/bin/time"
 alias v='fd --type f --hidden --exclude .git | fzf --tmux --reverse | xargs nvim'
+alias vim='nvim'
