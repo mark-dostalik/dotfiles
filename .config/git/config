@@ -9,6 +9,9 @@
   fixup = commit --fixup
 [core]
   editor = nvim
+[diff]
+  colormoved = "default"
+  colormovedws = "allow-indentation-change"
 [fetch]
   prune = true
 [includeIf "gitdir:~/work/"]
