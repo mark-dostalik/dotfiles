@@ -2,15 +2,14 @@
 # | ALIASES |
 # +---------+
 
-source "${XDG_CONFIG_HOME}/zsh/.aliases"
-source "${XDG_CONFIG_HOME}/zsh/.work_aliases"
+source "${ZDOTDIR}/.aliases"
+source "${ZDOTDIR}/.work_aliases"
 
 # +--------+
 # | PROMPT |
 # +--------+
 
-# .zshrc
-fpath+=($XDG_CONFIG_HOME/zsh/plugins/pure)
+fpath+=($ZDOTDIR/plugins/pure)
 autoload -U promptinit; promptinit
 prompt pure
 
@@ -81,6 +80,13 @@ bindkey -M vicmd '^a' incarg
 
 source <(fzf --zsh)
 
+zle     -N            fzf-cd-widget
+bindkey -M vicmd '^e' fzf-cd-widget
+bindkey -M viins '^e' fzf-cd-widget
+
+FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
+FZF_DEFAULT_OPTS="--tmux --reverse"
+
 # +------------+
 # | COMPLETION |
 # +------------+
@@ -95,10 +101,12 @@ source ~/.cache/carapace-init.zsh
 autoload -Uz compinit && compinit
 _comp_options+=(globdots)
 
-source "${XDG_CONFIG_HOME}/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh"
+source "${ZDOTDIR}/plugins/fzf-tab/fzf-tab.plugin.zsh"
 
 setopt MENU_COMPLETE
 
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "${ZDOTDIR}/.zcompcache"
 zstyle ':completion:*:descriptions' format '[%d]'
 zstyle ':completion:*:git-(checkout|commit):*' sort false
 zstyle ':fzf-tab:*' fzf-flags --bind=tab:accept
@@ -114,7 +122,7 @@ zstyle ':fzf-tab:complete:(vim|nvim|vi|cat|bat|less|more|ls|eza|cd):*' fzf-previ
 # | AUTO-SUGGESTIONS |
 # +------------------+
 
-source "${XDG_CONFIG_HOME}/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+source "${ZDOTDIR}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
 bindkey '^ ' autosuggest-accept
 bindkey '^[[[CE' autosuggest-execute  # CTRL + Enter
@@ -125,7 +133,7 @@ bindkey '^u' autosuggest-toggle
 # +---------+
 
 HISTSIZE=10000
-HISTFILE="${XDG_CONFIG_HOME}/zsh/.zsh_history"
+HISTFILE="${ZDOTDIR}/.zsh_history"
 SAVEHIST=$HISTSIZE
 HISTDUP=erase
 
@@ -153,7 +161,7 @@ eval "$(zoxide init --cmd cd zsh)"
 # | SYNTAX HIGHLIGHTNING |
 # +----------------------+
 
-source "${XDG_CONFIG_HOME}/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+source "${ZDOTDIR}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 # +---------+
 # | HELPERS |

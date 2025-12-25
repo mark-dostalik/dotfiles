@@ -14,10 +14,3 @@ export ZDOTDIR="${XDG_CONFIG_HOME}/zsh"
 
 # PATH
 export PATH="${XDG_BIN_HOME}:${PATH}"
-
-# fzf
-export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-
-# Java
-export JAVA_HOME="${HOME}/jdk-23.0.2.jdk/Contents/Home"
