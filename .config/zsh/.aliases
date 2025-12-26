@@ -1,5 +1,5 @@
 alias activate="source .venv/bin/activate"
-alias dotfiles="git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
+alias dot="git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME -c status.showUntrackedFiles=no"
 alias ll="ls -al --icons --git --group-directories-first"
 alias ls="eza"
 alias lt="ll --tree"
