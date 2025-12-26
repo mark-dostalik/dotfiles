@@ -9,6 +9,7 @@
   fixup = commit --fixup
 [core]
   editor = nvim
+  symlinks = true
 [diff]
   colormoved = "default"
   colormovedws = "allow-indentation-change"
