@@ -1,7 +1,7 @@
 alias activate="source .venv/bin/activate"
-alias dotfiles="git --git-dir=$HOME/dotfiles/ --work-tree=$HOME"
+alias dot="git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME -c status.showUntrackedFiles=no"
 alias ll="ls -al --icons --git --group-directories-first"
 alias ls="eza"
+alias lt="ll --tree"
 alias time="/usr/bin/time"
-alias v='fd --type f --hidden --exclude .git | fzf --tmux --reverse | xargs nvim'
 alias vim='nvim'
