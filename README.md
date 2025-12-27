@@ -1,3 +1,4 @@
+1. Install [`ghostty`](https://github.com/ghostty-org/ghostty) terminal emulator.
 1. Install the following CLI tools.
    - [`bat`](https://github.com/sharkdp/bat)
    - [`carapace`](https://github.com/carapace-sh/carapace-bin)
@@ -7,11 +8,11 @@
    - [`ripgrep`](https://github.com/BurntSushi/ripgrep)
    - [`yazi`](https://github.com/sxyazi/yazi)
    - [`zoxide`](https://github.com/ajeetdsouza/zoxide)
-2. Clone this repo onto the new machine as a non-bare repository (that includes the snapshot).
+2. Clone this repo onto the new machine.
    ```
    git clone --recurse-submodules --separate-git-dir=$HOME/.dotfiles git@github.com:mark-dostalik/dotfiles.git dotfiles-tmp
    ```
-3. Copy the snapshot from your temporary directory to the correct locations on your new machine.
+3. Copy the snapshot from the temporary directory to the correct locations.
    ```
    rsync --recursive --links --verbose --exclude '.git' dotfiles-tmp/ $HOME/
    ```
