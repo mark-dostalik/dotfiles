@@ -1,0 +1,18 @@
+theme = Catppuccin Mocha
+font-family = Hack Nerd Font
+font-size = 14
+macos-titlebar-style = hidden
+window-padding-y = 15,0
+window-padding-x = 10
+
+maximize = true
+quick-terminal-position = center
+
+mouse-hide-while-typing = true
+bell-features = no-attention, no-title
+macos-option-as-alt = left
+quit-after-last-window-closed = true
+
+keybind = ctrl+enter=text:\x1b[[CE
+keybind = global:cmd+s=toggle_quick_terminal
+keybind = global:cmd+r=reload_config
