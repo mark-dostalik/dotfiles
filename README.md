@@ -1,4 +1,3 @@
-1. Install [`ghostty`](https://github.com/ghostty-org/ghostty) terminal emulator.
 1. Install the following CLI tools.
    - [`bat`](https://github.com/sharkdp/bat)
    - [`carapace`](https://github.com/carapace-sh/carapace-bin)
