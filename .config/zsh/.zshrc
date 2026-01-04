@@ -3,7 +3,6 @@
 # +---------+
 
 source "${ZDOTDIR}/.aliases"
-source "${ZDOTDIR}/.work_aliases"
 
 # +--------+
 # | PROMPT |
@@ -206,3 +205,9 @@ function y() {
 	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
 	rm -f -- "$tmp"
 }
+
+# +------+
+# | WORK |
+# +------+
+
+source "${ZDOTDIR}/.work"
