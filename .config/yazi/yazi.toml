@@ -8,3 +8,17 @@ prepend_previewers = [
 prepend_preloaders = [
   { mime = "image/tiff", run = "magick" },
 ]
+
+[opener]
+pdf = [
+  { run = 'open -a "Preview" "$@"', orphan = true, desc = "Preview" }
+]
+video = [
+  { run = 'open -a "VLC" "$@"', orphan = true, desc = "VLC" }
+]
+
+[open]
+rules = [
+  { mime = "application/pdf", use = "pdf" },
+  { mime = "video/*", use = "video" }
+]
