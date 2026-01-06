@@ -73,6 +73,16 @@ autoload -Uz incarg
 zle -N incarg
 bindkey -M vicmd '^a' incarg
 
+# Yank to clipboard
+function copy-to-osc52() {
+    zle .vi-yank
+    local base64_text=$(printf "%s" "$CUTBUFFER" | base64 | tr -d '\n')
+    printf "\033]52;c;%s\007" "$base64_text" > /dev/tty
+}
+zle -N copy-to-osc52
+bindkey -M vicmd 'y' copy-to-osc52
+bindkey -M visual 'y' copy-to-osc52
+
 # +-----+
 # | fzf |
 # +-----+
