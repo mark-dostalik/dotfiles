@@ -4,6 +4,7 @@ show_hidden = true
 [plugin]
 prepend_previewers = [
   { mime = "image/tiff", run = "magick" },
+
 ]
 prepend_preloaders = [
   { mime = "image/tiff", run = "magick" },
@@ -22,8 +23,8 @@ text = [
 
 [open]
 rules = [
-  { mime = "application/pdf", use = "pdf" },
-  { mime = "video/*", use = "video" },
-  { mime = "text/*", use = "text" },
   { mime = "application/json", use = "text" },
+  { mime = "application/pdf", use = "pdf" },
+  { mime = "text/*", use = "text" },
+  { mime = "video/*", use = "video" },
 ]
