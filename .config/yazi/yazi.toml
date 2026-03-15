@@ -16,9 +16,14 @@ pdf = [
 video = [
   { run = 'open -a "VLC" "$@"', orphan = true, desc = "VLC" }
 ]
+text = [
+  { run = '$EDITOR "$@"', block = true, desc = "$EDITOR" },
+]
 
 [open]
 rules = [
   { mime = "application/pdf", use = "pdf" },
-  { mime = "video/*", use = "video" }
+  { mime = "video/*", use = "video" },
+  { mime = "text/*", use = "text" },
+  { mime = "application/json", use = "text" },
 ]
