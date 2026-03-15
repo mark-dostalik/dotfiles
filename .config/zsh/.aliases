@@ -1,5 +1,6 @@
 alias activate="source .venv/bin/activate"
 alias dot="git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME -c status.showUntrackedFiles=no"
+alias ipy="uv run ipython"
 alias ll="ls -al --icons --git --group-directories-first"
 alias ls="eza"
 alias lt="ll --tree"

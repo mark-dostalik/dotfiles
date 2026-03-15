@@ -16,11 +16,15 @@ c.TerminalInteractiveShell.shortcuts = [
 ]
 
 # vi mode
-c.TerminalInteractiveShell.editing_mode = 'vi'
+c.TerminalInteractiveShell.editing_mode = "vi"
 c.TerminalInteractiveShell.emacs_bindings_in_vi_insert_mode = False
+
+# yank to clipboard (may be required for remote sessions)
+# from prompt_toolkit.clipboard.pyperclip import PyperclipClipboard
+# c.TerminalInteractiveShell.clipboard_provider = PyperclipClipboard()
 
 c.TerminalInteractiveShell.confirm_exit = False
 
 # automatic reloading of imported modules
-c.InteractiveShellApp.exec_lines = ['%autoreload 2']
-c.InteractiveShellApp.extensions = ['autoreload']
+c.InteractiveShellApp.exec_lines = ["%autoreload 2"]
+c.InteractiveShellApp.extensions = ["autoreload"]
