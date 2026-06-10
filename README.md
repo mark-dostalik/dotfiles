@@ -8,6 +8,7 @@
    - [`eza`](https://github.com/eza-community/eza)
    - [`fd`](https://github.com/sharkdp/fd)
    - [`fzf`](https://github.com/junegunn/fzf)
+   - [`gh`](https://cli.github.com/)
    - [`ripgrep`](https://github.com/BurntSushi/ripgrep)
    - [`yazi`](https://github.com/sxyazi/yazi)
    - [`zoxide`](https://github.com/ajeetdsouza/zoxide)
