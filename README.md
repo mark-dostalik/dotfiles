@@ -63,3 +63,13 @@ auth       optional       /opt/homebrew/lib/pam/pam_reattach.so
    ```
    defaults write com.googlecode.iterm2 NoSyncNeverRemindPrefsChangesLostForFile_selection -int 2
    ```
+
+## Neovim setup
+
+Install neovim
+
+```
+brew install neovim
+```
+
+and make sure all [requirements](https://www.lazyvim.org/#%EF%B8%8F-requirements) for LazyVim are satisfied.
