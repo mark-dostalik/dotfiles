@@ -2,7 +2,8 @@
 
 ## Base setup
 
-1. Install the following CLI tools.
+1. Install [iTerm2](https://iterm2.com/), [`brew`](https://brew.sh/), and [`tmux`](https://github.com/tmux/tmux/wiki/Installing#binary-packages).
+2. Install the following CLI tools.
    - [`bat`](https://github.com/sharkdp/bat)
    - [`carapace`](https://github.com/carapace-sh/carapace-bin)
    - [`eza`](https://github.com/eza-community/eza)
@@ -12,19 +13,19 @@
    - [`ripgrep`](https://github.com/BurntSushi/ripgrep)
    - [`yazi`](https://github.com/sxyazi/yazi)
    - [`zoxide`](https://github.com/ajeetdsouza/zoxide)
-2. Clone this repo onto the new machine.
+3. Clone this repo onto the new machine.
 
    ```
    git clone --recurse-submodules --separate-git-dir=$HOME/.dotfiles git@github.com:mark-dostalik/dotfiles.git dotfiles-tmp
    ```
 
-3. Copy the snapshot from the temporary directory to the correct locations.
+4. Copy the snapshot from the temporary directory to the correct locations.
 
    ```
    rsync --recursive --links --verbose --exclude '.git' dotfiles-tmp/ $HOME/
    ```
 
-4. Remove the temporary directory.
+5. Remove the temporary directory.
 
    ```
    rm -rf dotfiles-tmp
