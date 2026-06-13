@@ -1,0 +1,27 @@
+# CLI tools
+brew "bat"
+brew "carapace"
+brew "eza"
+brew "fd"
+brew "ffmpeg"
+brew "fzf"
+brew "gh"
+brew "git"
+brew "htop"
+brew "imagemagick"
+brew "lazygit"
+brew "neovim"
+brew "pam-reattach"
+brew "ripgrep"
+brew "tmux"
+brew "watch"
+brew "wget"
+brew "yazi"
+brew "zoxide"
+
+# Casks
+cask "iterm2"
+cask "rectangle"
+
+# Fonts
+cask "font-hack-nerd-font"
