@@ -15,13 +15,6 @@ while true; do
 done 2>/dev/null &
 
 ###############################################################################
-# General UI/UX                                                               #
-###############################################################################
-
-# Disable the “Are you sure you want to open this application?” dialog
-defaults write com.apple.LaunchServices LSQuarantine -bool false
-
-###############################################################################
 # Sound                                                                       #
 ###############################################################################
 
@@ -127,6 +120,14 @@ defaults write com.googlecode.iterm2 NoSyncNeverRemindPrefsChangesLostForFile_se
 
 # Launch at login
 defaults write com.knollsoft.Rectangle launchOnLogin -bool true
+
+###############################################################################
+# Hammerspoon                                                                 #
+###############################################################################
+
+# Use XDG config directory
+defaults write org.hammerspoon.Hammerspoon MJConfigFile "~/.config/hammerspoon/init.lua"
+
 
 ###############################################################################
 # PAM (Touch ID for sudo in tmux/screen)                                      #

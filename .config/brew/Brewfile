@@ -20,8 +20,8 @@ brew "yazi"
 brew "zoxide"
 
 # Casks
+cask "hammerspoon"
 cask "iterm2"
-cask "rectangle"
 
 # Fonts
 cask "font-hack-nerd-font"
