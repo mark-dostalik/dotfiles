@@ -142,6 +142,16 @@ if [ ! -f "$PAM_LOCAL" ] || ! grep -q "pam_reattach.so" "$PAM_LOCAL"; then
 fi
 
 ###############################################################################
+# Power Management                                                            #
+###############################################################################
+
+# Turn display off after 120 minutes on battery
+sudo pmset -b displaysleep 120
+
+# Never turn display off on power adapter
+sudo pmset -c displaysleep 0
+
+###############################################################################
 # Apply changes                                                               #
 ###############################################################################
 
