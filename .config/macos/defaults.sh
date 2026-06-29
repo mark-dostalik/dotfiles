@@ -65,6 +65,9 @@ defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
 # Disable the warning when changing a file extension
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 
+# Keep folders on top when sorting by name
+defaults write com.apple.finder _FXSortFoldersFirst -bool true
+
 # New Finder windows show home directory
 defaults write com.apple.finder NewWindowTarget -string "PfHm"
 defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/"
@@ -127,7 +130,6 @@ defaults write com.knollsoft.Rectangle launchOnLogin -bool true
 
 # Use XDG config directory
 defaults write org.hammerspoon.Hammerspoon MJConfigFile "~/.config/hammerspoon/init.lua"
-
 
 ###############################################################################
 # PAM (Touch ID for sudo in tmux/screen)                                      #
