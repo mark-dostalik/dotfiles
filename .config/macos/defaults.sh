@@ -109,6 +109,10 @@ defaults write -g InitialKeyRepeat -int 10
 /usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:60:enabled false" ~/Library/Preferences/com.apple.symbolichotkeys.plist 2>/dev/null ||
   /usr/libexec/PlistBuddy -c "Add :AppleSymbolicHotKeys:60:enabled bool false" ~/Library/Preferences/com.apple.symbolichotkeys.plist
 
+# Remap Caps Lock to Control; applies on next login
+defaults -currentHost write -g com.apple.keyboard.modifiermapping.0-0-0 -array \
+  '{ HIDKeyboardModifierMappingSrc = 30064771129; HIDKeyboardModifierMappingDst = 30064771300; }'
+
 ###############################################################################
 # iTerm2                                                                      #
 ###############################################################################
