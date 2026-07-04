@@ -37,6 +37,9 @@ defaults write com.apple.dock tilesize -int 54
 # Disable magnification
 defaults write com.apple.dock magnification -bool false
 
+# Only display currently running apps in Dock
+defaults write com.apple.dock static-only -bool true
+
 # Don't show recent applications
 defaults write com.apple.dock show-recents -bool false
 
@@ -116,13 +119,6 @@ defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
 
 # Save preferences automatically
 defaults write com.googlecode.iterm2 NoSyncNeverRemindPrefsChangesLostForFile_selection -int 2
-
-###############################################################################
-# Rectangle                                                                   #
-###############################################################################
-
-# Launch at login
-defaults write com.knollsoft.Rectangle launchOnLogin -bool true
 
 ###############################################################################
 # Hammerspoon                                                                 #
