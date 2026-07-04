@@ -1,31 +1,109 @@
 {
-  "editorMode": "vim",
-  "model": "opus",
+  "model": "opus[1m]",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "tmux set-option -w -t $TMUX_PANE @claude_status processing"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "tmux set-option -w -t $TMUX_PANE @claude_status idle"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "tmux set-option -w -t $TMUX_PANE @claude_status waiting"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"Attention needed.\" with title \"Claude Code\"'"
+          }
+        ]
+      }
+    ],
+    "Elicitation": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "tmux set-option -w -t $TMUX_PANE @claude_status waiting"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "tmux set-option -w -t $TMUX_PANE @claude_status processing"
+          }
+        ]
+      }
+    ],
+    "ElicitationResult": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "tmux set-option -w -t $TMUX_PANE @claude_status processing"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "tmux set-option -w -t $TMUX_PANE @claude_status idle"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "tmux set-option -wu -t $TMUX_PANE @claude_status"
+          }
+        ]
+      }
+    ]
+  },
   "statusLine": {
     "type": "command",
     "command": "input=$(cat); vim=$(echo \"$input\" | jq -r '.vim.mode // empty'); project=$(echo \"$input\" | jq -r '.workspace.current_dir' | xargs basename); worktree=$(echo \"$input\" | jq -r '.workspace.git_worktree // empty'); branch=$(git -C \"$(echo \"$input\" | jq -r '.workspace.current_dir')\" branch --show-current 2>/dev/null); model=$(echo \"$input\" | jq -r '.model.display_name'); pct=$(echo \"$input\" | jq -r '.context_window.used_percentage // 0'); cost=$(echo \"$input\" | jq -r '.cost.total_cost_usd // 0'); filled=$(echo \"$pct\" | awk '{v=int($1/10+0.5); if(v>10)v=10; if(v<0)v=0; print v}'); full=\"━━━━━━━━━━\"; empty=\"──────────\"; bar=\"${full:0:$filled}${empty:0:$((10-filled))}\"; pct_int=$(printf \"%.0f\" \"$pct\"); cost_fmt=$(printf \"$%.2f\" \"$cost\"); out=\"\"; [ -n \"$vim\" ] && out=\"${vim} · \"; out=\"${out}${project}\"; if [ -n \"$worktree\" ]; then out=\"${out} ($worktree)\"; elif [ -n \"$branch\" ]; then out=\"${out} ($branch)\"; fi; out=\"${out} · ${model} · ${bar} ${pct_int}% · ${cost_fmt}\"; echo \"$out\"",
     "hideVimModeIndicator": true
   },
   "skipDangerousModePermissionPrompt": true,
-  "hooks": {
-    "UserPromptSubmit": [
-      { "matcher": "", "hooks": [{ "type": "command", "command": "tmux set-option -w -t $TMUX_PANE @claude_status processing" }] }
-    ],
-    "Stop": [
-      { "matcher": "", "hooks": [{ "type": "command", "command": "tmux set-option -w -t $TMUX_PANE @claude_status idle" }] },
-    ],
-    "PermissionRequest": [
-      { "matcher": "", "hooks": [{ "type": "command", "command": "tmux set-option -w -t $TMUX_PANE @claude_status 'needs attention'" }] },
-      { "matcher": "", "hooks": [{ "type": "command", "command": "osascript -e 'display notification \"Attention needed.\" with title \"Claude Code\"'" }] }
-    ],
-    "Elicitation": [
-      { "matcher": "", "hooks": [{ "type": "command", "command": "tmux set-option -w -t $TMUX_PANE @claude_status waiting" }] }
-    ],
-    "SessionStart": [
-      { "matcher": "", "hooks": [{ "type": "command", "command": "tmux set-option -w -t $TMUX_PANE @claude_status idle" }] }
-    ],
-    "SessionEnd": [
-      { "matcher": "", "hooks": [{ "type": "command", "command": "tmux set-option -wu -t $TMUX_PANE @claude_status" }] }
-    ]
-  }
+  "editorMode": "vim"
 }
