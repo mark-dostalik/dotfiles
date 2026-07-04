@@ -1,7 +1,16 @@
 hs.autoLaunch(true)
 
-hs.window.filter.default:subscribe(hs.window.filter.windowCreated, function(win)
-  win:maximize()
+-- Maximize application windows when they open.
+-- A dedicated filter restricted to standard windows keeps transient system
+-- HUDs (the volume/brightness on-screen display, notifications, Spotlight,
+-- etc.) from being grabbed and flung around the screen.
+local maximizeFilter = hs.window.filter.new(false)
+  :setDefaultFilter({ allowRoles = "AXStandardWindow" })
+
+maximizeFilter:subscribe(hs.window.filter.windowCreated, function(win)
+  if win:isStandard() then
+    win:maximize()
+  end
 end)
 
 hs.loadSpoon("ClipboardTool")
