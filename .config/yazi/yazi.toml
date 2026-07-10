@@ -1,6 +1,10 @@
 [mgr]
 show_hidden = true
 
+[preview]
+max_width = 2400
+max_height = 3600
+
 [plugin]
 prepend_previewers = [
   { mime = "image/tiff", run = "magick" },
