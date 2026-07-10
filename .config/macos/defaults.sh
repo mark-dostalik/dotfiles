@@ -19,7 +19,7 @@ done 2>/dev/null &
 ###############################################################################
 
 # Disable the sound effects on boot
-sudo nvram SystemAudioVolume=" "
+sudo nvram StartupMute=%01
 
 # Disable alert sound (e.g., Ctrl+C beep in terminal)
 defaults write -g com.apple.sound.beep.volume -float 0
