@@ -24,8 +24,8 @@ brew "yazi"
 brew "zoxide"
 
 # Casks
+cask "ghostty"
 cask "hammerspoon"
-cask "iterm2"
 
 # Fonts
 cask "font-hack-nerd-font"
