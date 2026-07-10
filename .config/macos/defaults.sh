@@ -109,9 +109,42 @@ defaults write -g InitialKeyRepeat -int 10
 /usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:60:enabled false" ~/Library/Preferences/com.apple.symbolichotkeys.plist 2>/dev/null ||
   /usr/libexec/PlistBuddy -c "Add :AppleSymbolicHotKeys:60:enabled bool false" ~/Library/Preferences/com.apple.symbolichotkeys.plist
 
-# Remap Caps Lock to Control; applies on next login
-defaults -currentHost write -g com.apple.keyboard.modifiermapping.0-0-0 -array \
-  '{ HIDKeyboardModifierMappingSrc = 30064771129; HIDKeyboardModifierMappingDst = 30064771300; }'
+# Combined key remappings via hidutil LaunchAgent (Applies on every login)
+# 1. Remaps F5 -> Keyboard brightness down
+# 2. Remaps F6 -> Keyboard brightness up
+# 3. Remaps Caps Lock -> Left Control
+cat >"$HOME/Library/LaunchAgents/com.local.keyRemapping.plist" <<'PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.local.keyRemapping</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/hidutil</string>
+        <string>property</string>
+        <string>--set</string>
+        <string>{"UserKeyMapping":[
+            {
+              "HIDKeyboardModifierMappingSrc": 0xC000000CF,
+              "HIDKeyboardModifierMappingDst": 0xFF00000009
+            },
+            {
+              "HIDKeyboardModifierMappingSrc": 0x10000009B,
+              "HIDKeyboardModifierMappingDst": 0xFF00000008
+            },
+            {
+              "HIDKeyboardModifierMappingSrc": 0x700000039,
+              "HIDKeyboardModifierMappingDst": 0x7000000E0
+            }
+        ]}</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+</dict>
+</plist>
+PLIST
 
 ###############################################################################
 # iTerm2                                                                      #
@@ -160,5 +193,6 @@ sudo pmset -c displaysleep 0
 # Restart affected applications
 killall Dock
 killall Finder
+killall SystemUIServer
 
 echo "Done. Some changes may require logout/restart to take effect."
