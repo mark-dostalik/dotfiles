@@ -149,6 +149,9 @@ sudo pmset -b displaysleep 120
 # Never turn display off on power adapter
 sudo pmset -c displaysleep 0
 
+# Never start the screen saver (0 = disabled)
+defaults -currentHost write com.apple.screensaver idleTime -int 0
+
 ###############################################################################
 # Apply changes                                                               #
 ###############################################################################
