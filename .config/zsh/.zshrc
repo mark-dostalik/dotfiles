@@ -187,17 +187,14 @@ if [[ -o interactive ]]; then
   }
 fi
 
-# Change current directory when exiting Yazi
-function y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-	command yazi "$@" --cwd-file="$tmp"
-	IFS= read -r -d '' cwd < "$tmp"
-	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
-	rm -f -- "$tmp"
-}
-
 # Set breakpoint function for Python debugging
 export PYTHONBREAKPOINT="IPython.core.debugger.set_trace"
+
+# +---------+
+# | HELPERS |
+# +---------+
+
+source "${ZDOTDIR}/.functions"
 
 # +------+
 # | WORK |

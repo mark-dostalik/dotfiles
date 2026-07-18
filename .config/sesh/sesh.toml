@@ -1,0 +1,15 @@
+[[session]]
+name = "base"
+path = "~"
+
+[[wildcard]]
+pattern = "~/work/*/*"
+startup_command = "claude"
+windows = [ "vim", "console" ]
+
+[[window]]
+name = "vim"
+startup_script = "activate 2>/dev/null; vim"
+
+[[window]]
+name = "console"

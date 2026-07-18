@@ -1,0 +1,172 @@
+# ANSI colors for status messages
+NC=$'\e[0m'
+BOLD_GREEN=$'\e[1;32m'
+BOLD_YELLOW=$'\e[1;33m'
+BOLD_RED=$'\e[1;31m'
+
+# Change current directory when exiting Yazi
+y() {
+  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+  command yazi "$@" --cwd-file="$tmp"
+  IFS= read -r -d '' cwd < "$tmp"
+  [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+  rm -f -- "$tmp"
+}
+
+# Create/attach a git worktree, init submodules + LFS, run uv sync
+gw() {
+  emulate -L zsh
+  setopt local_options err_return
+
+  local common root project branch slug dir session created=false
+  common=$(git rev-parse --git-common-dir 2>/dev/null) || {
+    echo "${BOLD_RED}error${NC}: not in a git repo" >&2; return 1; }
+  root=$(dirname "$(realpath "$common")")
+  project=$(basename "$root")
+  branch="${1:?usage: wt <branch>}"
+  slug="${branch//\//_}"
+  dir="$root/$slug"
+  session="$project/$slug"
+
+  if [[ ! -d "$dir" ]]; then
+    if git -C "$root" show-ref --verify --quiet "refs/heads/$branch"; then
+      git -C "$root" worktree add "$dir" "$branch"
+    elif git -C "$root" show-ref --verify --quiet "refs/remotes/origin/$branch"; then
+      git -C "$root" worktree add "$dir" "origin/$branch"
+    else
+      git -C "$root" worktree add "$dir" -b "$branch"
+    fi
+    created=true
+  fi
+
+  if [[ "$created" == true ]]; then
+    ( cd "$dir" && git lfs checkout; git submodule update --init --recursive )
+    if [[ -f "$dir/pyproject.toml" ]]; then
+      ( cd "$dir" && uv sync ) || echo "${BOLD_YELLOW}warn${NC}: uv sync failed" >&2
+    fi
+  fi
+
+  if [[ -n "$TMUX" ]]; then
+    tmux run-shell "sesh connect \"$dir\""
+  else
+    sesh connect "$dir"
+  fi
+}
+
+# Remove a git worktree + its branch, tmux session, and zoxide entry (confirm if dirty)
+gr() {
+  emulate -L zsh
+  setopt local_options err_return
+
+  local common root project branch slug dir session default current reply force=""
+  common=$(git rev-parse --git-common-dir 2>/dev/null) || {
+    echo "${BOLD_RED}error${NC}: not in a git repo" >&2; return 1; }
+  root=$(dirname "$(realpath "$common")")
+  project=$(basename "$root")
+  branch="${1:?usage: gr <branch>}"
+  slug="${branch//\//_}"
+  dir="$root/$slug"
+  session="$project/$slug"
+
+  if [[ ! -d "$dir" ]]; then
+    echo "${BOLD_RED}error${NC}: no worktree at $dir" >&2; return 1
+  fi
+
+  # Never remove the default branch's worktree
+  default=$(git -C "$root" symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null | sed 's|^origin/||')
+  default="${default:-main}"
+  if [[ "$branch" == "$default" ]]; then
+    echo "${BOLD_RED}error${NC}: refusing to remove the default worktree ('$default')" >&2; return 1
+  fi
+
+  # Confirm before discarding uncommitted or untracked changes
+  if [[ -n "$(git -C "$dir" status --porcelain)" ]]; then
+    echo "${BOLD_YELLOW}warn${NC}: '$branch' has uncommitted or untracked changes:" >&2
+    git -C "$dir" status --short >&2
+    read "reply?Delete anyway? [y/N] "
+    if [[ "$reply" != [yY]* ]]; then
+      echo "${BOLD_GREEN}info${NC}: aborted" >&2; return 1
+    fi
+    force="--force"
+  fi
+
+  # If attached to the session we're about to kill, move away first
+  if [[ -n "$TMUX" ]]; then
+    current=$(tmux display-message -p '#S')
+    if [[ "$current" == "$session" ]]; then
+      tmux switch-client -t "$project/${default//\//_}" 2>/dev/null \
+        || tmux switch-client -l 2>/dev/null || true
+    fi
+  fi
+
+  # Tear down: worktree (dir + submodules), local branch, zoxide entry, tmux session
+  git -C "$root" worktree remove $force "$dir"
+  git -C "$root" worktree prune
+  if ! git -C "$root" branch -D "$branch" 2>/dev/null; then
+    echo "${BOLD_YELLOW}warn${NC}: no local branch '$branch' to delete" >&2
+  fi
+  zoxide remove "$dir" 2>/dev/null || true
+  if tmux has-session -t "$session" 2>/dev/null; then
+    tmux kill-session -t "$session"
+  fi
+}
+
+# Clone into a bare-repo + sibling-worktree layout, then delegate first worktree to wt
+gc() {
+  emulate -L zsh
+  setopt local_options err_return
+
+  local url name base default
+  url="${1:?usage: wt-clone <ssh-url> [dir-name]}"
+  name="${2:-${${1:t}%.git}}"
+  base="$HOME/work/$name"
+
+  [[ -e "$base" ]] && { echo "${BOLD_RED}error${NC}: $base already exists" >&2; return 1; }
+
+  # Verify the remote is reachable before creating anything on disk
+  if ! git ls-remote "$url" &>/dev/null; then
+    echo "${BOLD_RED}error${NC}: cannot reach '$url' (check the URL)" >&2
+    return 1
+  fi
+
+  mkdir -p "$base"
+  cd "$base"
+
+  git clone --bare "$url" .bare
+  echo "gitdir: ./.bare" > .git
+  git --git-dir=.bare config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+  git fetch origin
+  git lfs install --local
+
+  default=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null | sed 's|^origin/||')
+  default="${default:-main}"
+
+  gw "$default"
+}
+
+# --- tab completion for gw / gr ------------------------------------------
+
+# gw: complete any local or remote branch (remotes de-prefixed + deduped)
+_gw() {
+  local -a branches
+  branches=(${(f)"$(git for-each-ref --format='%(refname:short)' \
+    refs/heads refs/remotes 2>/dev/null | sed 's|^origin/||' | sort -u)"})
+  branches=(${branches:#origin})   # drop the bare 'origin' (from origin/HEAD)
+  _describe -t branches 'branch' branches
+}
+compdef _gw gw
+
+# gr: complete only branches that have a worktree, minus the default branch
+_gr() {
+  local default
+  git rev-parse --git-common-dir >/dev/null 2>&1 || return
+  default=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null | sed 's|^origin/||')
+  default="${default:-main}"
+
+  local -a branches
+  branches=(${(f)"$(git worktree list --porcelain 2>/dev/null \
+    | sed -n 's|^branch refs/heads/||p')"})
+  branches=(${branches:#$default})
+  _describe -t branches 'worktree branch' branches
+}
+compdef _gr gr

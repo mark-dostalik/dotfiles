@@ -41,4 +41,4 @@ keybind = cmd+r=reload_config
 # +-----------------+
 # | Startup Command |
 # +-----------------+
-command = /bin/zsh -l -c "/opt/homebrew/bin/tmux new-session -A; exec /bin/zsh -l"
+command = /bin/zsh -l -c "/opt/homebrew/bin/tmux new-session -A -s base; exec /bin/zsh -l"
