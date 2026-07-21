@@ -4,7 +4,7 @@ path = "~"
 
 [[wildcard]]
 pattern = "~/work/*/*"
-startup_command = "claude"
+startup_command = "cc"
 windows = [ "vim", "console" ]
 
 [[window]]

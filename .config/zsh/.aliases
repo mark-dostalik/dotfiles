@@ -1,5 +1,5 @@
 alias activate="source .venv/bin/activate"
-alias cc="claude"
+alias cc="claude --dangerously-skip-permissions"
 alias dot="git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME -c status.showUntrackedFiles=no"
 alias ipy="uv run ipython"
 alias ll="ls -al --icons --git --group-directories-first"
