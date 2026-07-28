@@ -100,10 +100,10 @@ defaults write -g com.apple.trackpad.forceClick -bool true
 ###############################################################################
 
 # Fast key repeat rate (lower = faster, default is 6)
-defaults write -g KeyRepeat -int 1
+defaults write -g KeyRepeat -int 2
 
 # Short delay until key repeat (lower = shorter, default is 25)
-defaults write -g InitialKeyRepeat -int 10
+defaults write -g InitialKeyRepeat -int 15
 
 # Disable "Select the previous input source" shortcut (Ctrl+Space)
 /usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:60:enabled false" ~/Library/Preferences/com.apple.symbolichotkeys.plist 2>/dev/null ||
