@@ -4,6 +4,19 @@ BOLD_GREEN=$'\e[1;32m'
 BOLD_YELLOW=$'\e[1;33m'
 BOLD_RED=$'\e[1;31m'
 
+# Status messages, all on stderr so they never pollute a function's output
+_msg_info() {
+  echo "${BOLD_GREEN}info${NC}: $*" >&2
+}
+
+_msg_warn() {
+  echo "${BOLD_YELLOW}warn${NC}: $*" >&2
+}
+
+_msg_error() {
+  echo "${BOLD_RED}error${NC}: $*" >&2
+}
+
 # Change current directory when exiting Yazi
 y() {
   local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
@@ -13,36 +26,55 @@ y() {
   rm -f -- "$tmp"
 }
 
+# Resolve repo root and branch paths; sets root/project/branch/slug/dir/session
+_wt_ctx() {
+  local common
+  branch=${1:-}
+  [[ -n "$branch" ]] || {
+    _msg_error "usage: ${funcstack[2]} <branch>"; return 1; }
+  common=$(git rev-parse --git-common-dir 2>/dev/null) || {
+    _msg_error "not in a git repo"; return 1; }
+  root=$(dirname "$(realpath "$common")")
+  project=${root:t}
+  slug=${branch//\//_}
+  dir="$root/$slug"
+  session="$project/$slug"
+}
+
+# Default branch name, per origin/HEAD (gc points it at the remote's default)
+_wt_default() {
+  local ref
+  ref=$(git -C "${1:-.}" symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null) || {
+    _msg_error "no origin/HEAD; run: git remote set-head origin --auto"; return 1; }
+  echo "${ref#origin/}"
+}
+
 # Create/attach a git worktree, init submodules + LFS, run uv sync
 gw() {
   emulate -L zsh
   setopt local_options err_return
 
-  local common root project branch slug dir session created=false
-  common=$(git rev-parse --git-common-dir 2>/dev/null) || {
-    echo "${BOLD_RED}error${NC}: not in a git repo" >&2; return 1; }
-  root=$(dirname "$(realpath "$common")")
-  project=$(basename "$root")
-  branch="${1:?usage: wt <branch>}"
-  slug="${branch//\//_}"
-  dir="$root/$slug"
-  session="$project/$slug"
+  local root project branch slug dir session base
+  _wt_ctx "${1:-}"
 
   if [[ ! -d "$dir" ]]; then
+    # Refresh remote refs so new branches start from the latest default branch
+    git -C "$root" fetch --prune origin \
+      || _msg_warn "git fetch failed, using cached refs"
+
     if git -C "$root" show-ref --verify --quiet "refs/heads/$branch"; then
       git -C "$root" worktree add "$dir" "$branch"
     elif git -C "$root" show-ref --verify --quiet "refs/remotes/origin/$branch"; then
-      git -C "$root" worktree add "$dir" "origin/$branch"
+      git -C "$root" worktree add --track -b "$branch" "$dir" "origin/$branch"
     else
-      git -C "$root" worktree add "$dir" -b "$branch"
+      base=$(_wt_default "$root")
+      _msg_info "branching '$branch' off origin/$base"
+      git -C "$root" worktree add --no-track -b "$branch" "$dir" "origin/$base"
     fi
-    created=true
-  fi
 
-  if [[ "$created" == true ]]; then
     ( cd "$dir" && git lfs checkout; git submodule update --init --recursive )
     if [[ -f "$dir/pyproject.toml" ]]; then
-      ( cd "$dir" && uv sync ) || echo "${BOLD_YELLOW}warn${NC}: uv sync failed" >&2
+      ( cd "$dir" && uv sync ) || _msg_warn "uv sync failed"
     fi
   fi
 
@@ -58,88 +90,83 @@ gr() {
   emulate -L zsh
   setopt local_options err_return
 
-  local common root project branch slug dir session default current reply force=""
-  common=$(git rev-parse --git-common-dir 2>/dev/null) || {
-    echo "${BOLD_RED}error${NC}: not in a git repo" >&2; return 1; }
-  root=$(dirname "$(realpath "$common")")
-  project=$(basename "$root")
-  branch="${1:?usage: gr <branch>}"
-  slug="${branch//\//_}"
-  dir="$root/$slug"
-  session="$project/$slug"
+  local root project branch slug dir session default reply force=""
+  _wt_ctx "${1:-}"
+  default=$(_wt_default "$root")
 
   if [[ ! -d "$dir" ]]; then
-    echo "${BOLD_RED}error${NC}: no worktree at $dir" >&2; return 1
+    _msg_error "no worktree at $dir"; return 1
   fi
-
   # Never remove the default branch's worktree
-  default=$(git -C "$root" symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null | sed 's|^origin/||')
-  default="${default:-main}"
   if [[ "$branch" == "$default" ]]; then
-    echo "${BOLD_RED}error${NC}: refusing to remove the default worktree ('$default')" >&2; return 1
+    _msg_error "refusing to remove the default worktree ('$default')"; return 1
   fi
 
   # Confirm before discarding uncommitted or untracked changes
   if [[ -n "$(git -C "$dir" status --porcelain)" ]]; then
-    echo "${BOLD_YELLOW}warn${NC}: '$branch' has uncommitted or untracked changes:" >&2
+    _msg_warn "'$branch' has uncommitted or untracked changes:"
     git -C "$dir" status --short >&2
     read "reply?Delete anyway? [y/N] "
     if [[ "$reply" != [yY]* ]]; then
-      echo "${BOLD_GREEN}info${NC}: aborted" >&2; return 1
+      _msg_info "aborted"; return 1
     fi
     force="--force"
   fi
 
   # If attached to the session we're about to kill, move away first
-  if [[ -n "$TMUX" ]]; then
-    current=$(tmux display-message -p '#S')
-    if [[ "$current" == "$session" ]]; then
-      tmux switch-client -t "$project/${default//\//_}" 2>/dev/null \
-        || tmux switch-client -l 2>/dev/null || true
-    fi
+  if [[ -n "$TMUX" && "$(tmux display-message -p '#S')" == "$session" ]]; then
+    tmux switch-client -t "$project/${default//\//_}" 2>/dev/null \
+      || tmux switch-client -l 2>/dev/null || true
   fi
 
   # Tear down: worktree (dir + submodules), local branch, zoxide entry, tmux session
-  git -C "$root" worktree remove $force "$dir"
+  git -C "$dir" submodule deinit --all --force 2>/dev/null || true
+  git -C "$root" worktree remove $force "$dir" 2>/dev/null || rm -rf "$dir"
   git -C "$root" worktree prune
-  if ! git -C "$root" branch -D "$branch" 2>/dev/null; then
-    echo "${BOLD_YELLOW}warn${NC}: no local branch '$branch' to delete" >&2
-  fi
+  git -C "$root" branch -D "$branch" >/dev/null 2>&1 \
+    || _msg_warn "no local branch '$branch' to delete"
   zoxide remove "$dir" 2>/dev/null || true
   if tmux has-session -t "$session" 2>/dev/null; then
     tmux kill-session -t "$session"
   fi
 }
 
-# Clone into a bare-repo + sibling-worktree layout, then delegate first worktree to wt
+# Clone into the bare-repo + worktree layout, then hand the default branch to gw
 gc() {
   emulate -L zsh
   setopt local_options err_return
 
   local url name base default
-  url="${1:?usage: wt-clone <ssh-url> [dir-name]}"
-  name="${2:-${${1:t}%.git}}"
+  url=${1:-}
+  [[ -n "$url" ]] || { _msg_error "usage: gc <ssh-url> [dir-name]"; return 1; }
+  name="${2:-${${url:t}%.git}}"
   base="$HOME/work/$name"
 
-  [[ -e "$base" ]] && { echo "${BOLD_RED}error${NC}: $base already exists" >&2; return 1; }
+  [[ -e "$base" ]] && { _msg_error "$base already exists"; return 1; }
 
   # Verify the remote is reachable before creating anything on disk
   if ! git ls-remote "$url" &>/dev/null; then
-    echo "${BOLD_RED}error${NC}: cannot reach '$url' (check the URL)" >&2
+    _msg_error "cannot reach '$url' (check the URL)"
     return 1
   fi
 
   mkdir -p "$base"
   cd "$base"
 
-  git clone --bare "$url" .bare
+  # init + fetch rather than 'clone --bare': a bare clone would materialize
+  # every remote branch as a local head with no upstream and no worktree
+  git init --quiet --bare .bare
   echo "gitdir: ./.bare" > .git
-  git --git-dir=.bare config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
-  git fetch origin
+  # Relative worktree links, so git still works when synced to a different path
+  git config worktree.useRelativePaths true
+  git remote add origin "$url"
   git lfs install --local
+  git fetch origin
+  git remote set-head origin --auto >/dev/null
 
-  default=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null | sed 's|^origin/||')
-  default="${default:-main}"
+  # Leave the bare HEAD on the remote's default so plain 'git log' etc. work
+  default=$(_wt_default)
+  git symbolic-ref HEAD "refs/heads/$default"
 
   gw "$default"
 }
@@ -159,9 +186,7 @@ compdef _gw gw
 # gr: complete only branches that have a worktree, minus the default branch
 _gr() {
   local default
-  git rev-parse --git-common-dir >/dev/null 2>&1 || return
-  default=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null | sed 's|^origin/||')
-  default="${default:-main}"
+  default=$(_wt_default 2>/dev/null) || return
 
   local -a branches
   branches=(${(f)"$(git worktree list --porcelain 2>/dev/null \
