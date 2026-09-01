@@ -1,0 +1,4 @@
+[[mgr.prepend_keymap]]
+on = "Y"
+run = 'shell -- for path in "$@"; do cat "$path"; done | pbcopy'
+desc = "Copy file contents to clipboard"

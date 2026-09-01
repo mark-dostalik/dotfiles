@@ -15,20 +15,31 @@ prepend_preloaders = [
 ]
 
 [opener]
+browser = [
+  { run = 'open -a "Google Chrome" %s', orphan = true, desc = "Open in Browser" }
+]
 pdf = [
   { run = 'open -a "Preview" "$@"', orphan = true, desc = "Preview" }
-]
-video = [
-  { run = 'open -a "VLC" "$@"', orphan = true, desc = "VLC" }
 ]
 text = [
   { run = '$EDITOR "$@"', block = true, desc = "$EDITOR" },
 ]
+video = [
+  { run = 'open -a "VLC" "$@"', orphan = true, desc = "VLC" }
+]
 
 [open]
 rules = [
+  # 1. Web files first (Highest Priority)
+  { mime = "text/html", use = "browser" },
+  { url = "*.html", use = "browser" },
+  { url = "*.htm", use = "browser" },
+
+  # 2. Specific file types
   { mime = "application/json", use = "text" },
   { mime = "application/pdf", use = "pdf" },
+  
+  # 3. Wildcard fallbacks (Lowest Priority)
   { mime = "text/*", use = "text" },
   { mime = "video/*", use = "video" },
 ]
