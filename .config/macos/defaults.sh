@@ -43,6 +43,9 @@ defaults write com.apple.dock static-only -bool true
 # Don't show recent applications
 defaults write com.apple.dock show-recents -bool false
 
+# Prefer tabs when opening documents (manual, fullscreen, always)
+defaults write NSGlobalDomain AppleWindowTabbingMode -string "always"
+
 # Disable all hot corners (1 = no action)
 defaults write com.apple.dock wvous-tl-corner -int 1
 defaults write com.apple.dock wvous-tr-corner -int 1
@@ -94,6 +97,15 @@ defaults write com.apple.AppleMultitouchTrackpad SecondClickThreshold -int 1
 
 # Enable force click
 defaults write -g com.apple.trackpad.forceClick -bool true
+
+# Use trackpad for dragging with three finger drag
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
+
+# Move three-finger swipe gestures to four fingers so they don't conflict with dragging
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerHorizSwipeGesture -int 0
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerVertSwipeGesture -int 0
+defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerHorizSwipeGesture -int 2
+defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerVertSwipeGesture -int 2
 
 ###############################################################################
 # Keyboard                                                                    #
